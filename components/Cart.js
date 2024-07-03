@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { SafeAreaView, View, Text, Image, FlatList, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Cart = ({ navigation }) => {
@@ -28,26 +28,54 @@ const Cart = ({ navigation }) => {
     }
   };
 
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + item.price, 0);
+  };
+  const [lineLength, setLineLength] = useState(100);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Image source={require('../assets/Logo.png')} style={styles.logo} />
+        <Image source={require('../assets/Search.png')} style={styles.icon} />
+      </View>
+      <Text style={styles.checkoutTitle}>CHECKOUT</Text>
+      <View style={styles.lineContainer}>
+        <View style={[styles.line, { width: lineLength }]} />
+        <View style={styles.diamond} />
+        <View style={[styles.line, { width: lineLength }]} />
+      </View>
       <FlatList
         data={cartItems}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => `${item.id}-${index}`} // Ensure unique keys
         renderItem={({ item }) => (
           <View style={styles.cartItemContainer}>
             <Image source={item.image} style={styles.cartItemImage} />
             <View style={styles.cartItemDetails}>
-              <Text style={styles.cartItemName}>{item.name}</Text>
+              <Text style={styles.cartItemName}>{item.name.toUpperCase()}</Text>
+              <Text style={styles.cartItemDescription}>{item.description}</Text>
               <Text style={styles.cartItemPrice}>${item.price}</Text>
-              <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                <Image source={require('../assets/remove.png')} style={styles.removeFromCartIcon} />
-              </TouchableOpacity>
             </View>
+            <TouchableOpacity onPress={() => removeFromCart(item.id)} style={styles.removeButton}>
+              <Image source={require('../assets/remove.png')} style={styles.removeFromCartIcon} />
+            </TouchableOpacity>
           </View>
         )}
       />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-    </View>
+      <View style={styles.footer}>
+        <View style={styles.totalContainer}>
+          <Text style={styles.totalText}>EST. TOTAL</Text>
+          <Text style={styles.totalPrice}>${calculateTotal()}</Text>
+        </View>
+        <View style={styles.checkoutButtonContainer}>
+          <TouchableWithoutFeedback onPress={() => navigation.navigate('Checkout')}>
+            <View style={styles.checkoutButton}>
+              <Image source={require('../assets/shoppingBag.png')} style={styles.cartIcon} />
+              <Text style={styles.checkoutText}>CHECKOUT</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -56,32 +84,125 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  logo: {
+    width: 120,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    position: 'absolute',
+    right: 10,
+  },
+  checkoutTitle: {
+    fontSize: 24,
+    textAlign: 'center',
+    marginVertical: 20,
+  },
   cartItemContainer: {
     flexDirection: 'row',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    paddingVertical: 10,
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   cartItemImage: {
     width: 80,
-    height: 80,
+    height: 120,
     resizeMode: 'contain',
   },
   cartItemDetails: {
+    flex: 1,
     marginLeft: 10,
-    justifyContent: 'center',
+  },
+  lineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    marginLeft:90,
+    
+  },
+  line: {
+   
+    height: 1,
+    backgroundColor: 'black',
+    width:1,
+   
+  },
+  diamond: {
+    width: 10,
+    height: 10,
+    backgroundColor: 'white', 
+    borderColor: 'black', 
+    borderWidth: 1, 
+    transform: [{ rotate: '45deg' }], 
+   
   },
   cartItemName: {
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cartItemDescription: {
+    fontSize: 14,
+    color: '#888',
   },
   cartItemPrice: {
     fontSize: 16,
-    color: '#888',
+    color: 'orange',
+    marginTop: 5,
+  },
+  removeButton: {
+    padding: 10,
   },
   removeFromCartIcon: {
     width: 24,
     height: 24,
+  },
+  footer: {
+    paddingVertical: 10,
+    width: '100%',
+  },
+  totalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  totalText: {
+    fontSize: 16,
+    color: '#888',
+  },
+  totalPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'orange',
+  },
+  checkoutButtonContainer: {
+    width: '100%',
+  },
+  checkoutButton: {
+    backgroundColor: 'black',
+    padding: 15,
     marginTop: 10,
+    flexDirection: 'row',
+    
+    justifyContent: 'center',
+    width: '100%',
+  },
+  checkoutText: {
+    color: 'white',
+    marginLeft: 10,
+  },
+  cartIcon: {
+    width: 21,
+    height: 21,
+    tintColor: 'white',
   },
 });
 

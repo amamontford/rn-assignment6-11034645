@@ -10,15 +10,8 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={{ headerShown: false }} // Hides the header for the Home screen
-        />
-        <Stack.Screen 
-          name="Cart" 
-          component={Cart} 
-        />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Cart" component={Cart} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
