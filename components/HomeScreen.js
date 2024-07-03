@@ -76,33 +76,36 @@ const styles = StyleSheet.create({
   productContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    margin: 2,
-    padding: 5, 
+    alignItems: 'center',
+    margin: 5,
+    padding: 10, 
   },
   imageContainer: {
     position: 'relative',
   },
   productImage: {
-    width: 150,
-    height: 200,
-    resizeMode: 'contain',
+    width: 180,
+    height: 240,
+    resizeMode: 'cover',
   },
   productName: {
     fontSize: 16,
     marginTop: 10,
     textAlign: 'left',
+    alignSelf: 'flex-start'
   },
   productDescription: {
-    fontSize: 14,
+    fontSize: 13,
     marginTop: 5,
-    textAlign: 'left',
     color: '#888',
+    alignSelf: 'flex-start'
   },
   productPrice: {
     fontSize: 14,
     color: 'orange',
     marginTop: 5,
+    textAlign: 'center',
+    alignSelf: 'flex-start'
   },
   addToCartButton: {
     position: 'absolute',
